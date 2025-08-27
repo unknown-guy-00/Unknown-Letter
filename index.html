@@ -1,0 +1,563 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>For ____, With All My Heart</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    :root {
+      --heart-pink: #ff5eaa;
+      --heart-red: #ff3d63;
+      --night-bg: #101020;
+      --star-color: #fffbe8;
+      --letter-bg: rgba(30, 20, 56, 0.92);
+      --border: 2px solid #ffb6e6;
+    }
+    html, body {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      min-height: 100vh;
+      font-family: 'Segoe UI', 'Comic Sans MS', cursive, sans-serif;
+      background: var(--night-bg);
+      color: #fff;
+      overflow-x: hidden;
+    }
+    body {
+      position: relative;
+      min-height: 100vh;
+      width: 100vw;
+    }
+
+    /* Twinkling Stars */
+    .stars, .stars2, .stars3 {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100vw; height: 100vh;
+      pointer-events: none;
+      z-index: 0;
+    }
+    .stars {
+      background: transparent url('https://raw.githubusercontent.com/marcbruederlin/particles.js/master/demo/img/stars.png') repeat top center;
+      animation: moveStars 100s linear infinite;
+      opacity: 0.7;
+    }
+    .stars2 {
+      background: transparent url('https://raw.githubusercontent.com/marcbruederlin/particles.js/master/demo/img/stars2.png') repeat top center;
+      animation: moveStars 160s linear infinite;
+      opacity: 0.5;
+    }
+    .stars3 {
+      background: transparent url('https://raw.githubusercontent.com/marcbruederlin/particles.js/master/demo/img/stars3.png') repeat top center;
+      animation: moveStars 220s linear infinite;
+      opacity: 0.3;
+    }
+    @keyframes moveStars {
+      0% { background-position: 0 0, 0 0, 0 0; }
+      100% { background-position: 10000px 10000px, 20000px 20000px, 30000px 30000px; }
+    }
+
+    /* Hearts Animation */
+    .hearts {
+      position: fixed;
+      left: 0; top: 0;
+      width: 100vw; height: 100vh;
+      pointer-events: none;
+      z-index: 1;
+    }
+    .heart {
+      position: absolute;
+      width: 32px; height: 32px;
+      opacity: 0.65;
+      animation: floatHearts 8s linear infinite;
+      filter: drop-shadow(0 2px 12px #ffb6e6);
+    }
+    @keyframes floatHearts {
+      0% { transform: translateY(100vh) scale(0.7) rotate(0deg);}
+      80% { opacity: 1; }
+      100% { transform: translateY(-10vh) scale(1.1) rotate(30deg); opacity: 0;}
+    }
+
+    /* Password Gate */
+    #password-gate {
+      z-index: 10;
+      position: fixed;
+      top: 0; left: 0; width: 100vw; height: 100vh;
+      background: linear-gradient(135deg, #191531 60%, #251427 100%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      transition: opacity 0.6s;
+    }
+    #password-gate[hidden] {
+      opacity: 0;
+      pointer-events: none;
+      visibility: hidden;
+    }
+    .pw-content {
+      background: rgba(24,12,44,0.94);
+      border-radius: 22px;
+      border: var(--border);
+      box-shadow: 0 4px 40px 0 #ffb6e655;
+      padding: 2rem 1.5rem;
+      text-align: center;
+      max-width: 90vw;
+    }
+    .pw-content h1 {
+      font-size: 2.1rem;
+      margin: 0 0 1rem 0;
+      color: var(--heart-pink);
+      text-shadow: 0 2px 8px #ff9be8;
+    }
+    .pw-content .hint {
+      font-size: 1.1rem;
+      color: #fff8;
+      margin-bottom: 1.9rem;
+      font-style: italic;
+    }
+    .pw-content input[type="password"] {
+      width: 80vw; max-width: 320px;
+      font-size: 1.3rem;
+      padding: 1rem;
+      border-radius: 1rem;
+      border: var(--border);
+      margin-bottom: 1.2rem;
+      outline: none;
+      background: #22113a;
+      color: #fff;
+      text-align: center;
+      letter-spacing: 0.2em;
+      box-sizing: border-box;
+    }
+    .pw-content button {
+      width: 80vw; max-width: 320px;
+      font-size: 1.2rem;
+      padding: 1rem 0;
+      border-radius: 1rem;
+      border: none;
+      background: linear-gradient(90deg, var(--heart-pink), var(--heart-red));
+      color: #fff;
+      font-weight: bold;
+      letter-spacing: 0.18em;
+      box-shadow: 0 4px 18px #ffb6e688;
+      transition: background 0.2s;
+      cursor: pointer;
+    }
+    .pw-content button:active {
+      background: linear-gradient(90deg, var(--heart-red), var(--heart-pink));
+    }
+    .pw-error {
+      color: #ffb6e6;
+      margin-top: 1rem;
+      font-size: 1rem;
+      min-height: 1.4em;
+      height: 1.4em;
+      transition: opacity 0.3s;
+    }
+
+    /* Main Content */
+    #main-content {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      min-height: 100vh;
+      width: 100vw;
+      position: relative;
+      z-index: 2;
+      padding-top: 7vh;
+      padding-bottom: 6vh;
+    }
+    .love-letter-card {
+      background: var(--letter-bg);
+      border-radius: 25px;
+      border: var(--border);
+      padding: 2.2rem 1.2rem 2rem 1.2rem;
+      max-width: 540px;
+      box-shadow: 0 8px 44px 0 #ffb6e655;
+      margin: 2vh auto 3vh auto;
+      text-align: center;
+      transition: box-shadow 0.18s;
+      position: relative;
+    }
+    .love-letter-card::before {
+      content: "❤️";
+      font-size: 2.8rem;
+      position: absolute;
+      left: 1.3rem;
+      top: -1.8rem;
+      filter: drop-shadow(0 2px 8px #ffb6e6cc);
+      animation: pulse 2.4s infinite;
+    }
+    @keyframes pulse {
+      0%,100% { transform: scale(1);}
+      50% { transform: scale(1.12);}
+    }
+    .love-letter-card h2 {
+      font-size: 2.2rem;
+      font-family: 'Dancing Script', 'Segoe Script', cursive, sans-serif;
+      color: var(--heart-pink);
+      margin-bottom: 1.2rem;
+      text-shadow: 0 2px 12px #ff5eaa77;
+    }
+    .love-letter-card p {
+      font-size: 1.13rem;
+      line-height: 1.7;
+      margin: 0 0 1.1rem 0;
+      color: #fffde9;
+      text-shadow: 0 1px 4px #0008;
+      letter-spacing: 0.01em;
+    }
+
+    .proposal-section {
+      margin: 2vh auto 0 auto;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    .proposal-q {
+      font-size: 1.7rem;
+      color: var(--heart-pink);
+      font-family: 'Dancing Script', cursive, sans-serif;
+      margin-bottom: 2.1rem;
+      text-shadow: 0 2px 12px #ff5eaa77;
+    }
+    .proposal-buttons {
+      display: flex;
+      flex-direction: row;
+      gap: 2vw;
+      justify-content: center;
+      align-items: center;
+      width: 100%;
+      max-width: 80vw;
+      margin-bottom: 2vh;
+      position: relative;
+    }
+    .yes-btn, .no-btn {
+      font-size: 1.4rem;
+      min-width: 124px;
+      min-height: 56px;
+      padding: 0.9em 1.8em;
+      border: none;
+      border-radius: 2.2em;
+      transition: transform 0.16s, background 0.18s;
+      font-weight: bold;
+      box-shadow: 0 2px 16px #ffb6e688;
+      margin: 0 1vw;
+      cursor: pointer;
+      outline: none;
+      z-index: 2;
+      user-select: none;
+      touch-action: manipulation;
+    }
+    .yes-btn {
+      background: linear-gradient(90deg, var(--heart-pink), var(--heart-red));
+      color: #fff;
+      letter-spacing: 0.05em;
+    }
+    .yes-btn:active {
+      background: linear-gradient(90deg, var(--heart-red), var(--heart-pink));
+      transform: scale(1.04);
+    }
+    .no-btn {
+      background: #333146;
+      color: #ffb6e6;
+      border: 2px dashed var(--heart-pink);
+    }
+    .no-btn:active {
+      background: #251427;
+      color: #ff3d63;
+      transform: scale(0.98);
+    }
+
+    /* YES Screen */
+    #yes-screen {
+      z-index: 50;
+      position: fixed;
+      top: 0; left: 0;
+      width: 100vw; height: 100vh;
+      background: linear-gradient(120deg, #191531 60%, #ff5eaa 100%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.6s;
+    }
+    #yes-screen.show {
+      opacity: 1;
+      pointer-events: all;
+    }
+    .yes-message {
+      font-size: 2.7rem;
+      color: #fff;
+      font-family: 'Dancing Script', cursive, sans-serif;
+      text-align: center;
+      margin-bottom: 2rem;
+      text-shadow: 0 2px 18px #ffb6e6cc;
+      animation: pulse 2s infinite;
+    }
+    .big-heart {
+      font-size: 6rem;
+      text-shadow: 0 2px 32px #ff5eaa99;
+      animation: pulse 1.8s infinite;
+    }
+
+    /* POOKIE DECORATIONS */
+    .pookie {
+      font-size: 2.5rem;
+      filter: drop-shadow(0 2px 12px #ff5eaa88);
+      position: absolute;
+      pointer-events: none;
+      opacity: 0.9;
+      z-index: 5;
+    }
+
+    /* Responsive Design */
+    @media (max-width: 600px) {
+      .love-letter-card {
+        padding: 1.2rem 0.4rem 1.3rem 0.4rem;
+        font-size: 1rem;
+      }
+      .love-letter-card h2 { font-size: 1.3rem; }
+      .proposal-q { font-size: 1.18rem; }
+      .yes-btn, .no-btn {
+        font-size: 1.08rem;
+        min-width: 100px;
+        min-height: 44px;
+        padding: 0.7em 1.2em;
+      }
+      .pw-content input[type="password"],
+      .pw-content button {
+        font-size: 1.05rem;
+        padding: 0.8em 0;
+      }
+    }
+  </style>
+  <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&display=swap" rel="stylesheet">
+</head>
+<body>
+  <!-- Stars & Hearts -->
+  <div class="stars"></div>
+  <div class="stars2"></div>
+  <div class="stars3"></div>
+  <div class="hearts" id="hearts-container"></div>
+  
+  <!-- POOKIE Decorations -->
+  <span class="pookie" style="top:6vh; left:5vw; transform:rotate(-14deg);">❤️</span>
+  <span class="pookie" style="bottom:7vh; right:8vw; transform:rotate(7deg);">🌹</span>
+  <span class="pookie" style="top:13vh; right:3vw; transform:rotate(10deg);">💖</span>
+  <span class="pookie" style="bottom:12vh; left:7vw; transform:scaleX(-1) rotate(-8deg);">❤️</span>
+
+  <!-- Password Gate -->
+  <div id="password-gate">
+    <form class="pw-content" id="pw-form" autocomplete="off">
+      <h1>✨ Secret Entrance ✨</h1>
+      <div class="hint">Hint: Date on which Your beautiful eyes opened "<span style="font-size:1.2em">👀</span>"</div>
+      <input type="password" id="pw-input" placeholder="DDMMYYYY" maxlength="8" inputmode="numeric" required autofocus>
+      <br>
+      <button type="submit">Unlock</button>
+      <div class="pw-error" id="pw-error"></div>
+    </form>
+  </div>
+
+  <!-- Shayari Page -->
+  <div id="shayari-page" hidden>
+    <div class="love-letter-card">
+      <h2>Shayari</h2>
+      <p>
+        Dekh Kar Aapki Muskurahat, Hum Hosh Gawa Bethe,<br>
+        Hum Hosh Main Hi Aane Wale The, Aap Fir se Muskura Bethe 😊
+      </p>
+      <button id="next-to-letter">Next</button>
+    </div>
+  </div>
+
+  <!-- Letter Page -->
+  <div id="letter-page" hidden>
+    <div class="love-letter-card">
+      <h2>To Anandi, from your Secret Admirer</h2>
+      <p>
+        My dearest, we haven't shared a conversation yet, but my heart feels like it has known you for a lifetime.<br><br>
+        Every time I see you, my world stops. Your smile is my favourite sight, and the sound of your laughter is a melody I wish I could hear forever.<br><br>
+        I am writing this because my courage fails me in person, but my love for you is too powerful to stay silent.<br><br>
+        This is me, taking the biggest chance of my life for the one who makes my heart beat out of my chest.
+      </p>
+      <button id="next-to-proposal">Next</button>
+    </div>
+  </div>
+
+  <!-- Proposal Page -->
+  <div id="proposal-page" hidden>
+    <div class="proposal-section">
+      <div class="proposal-q">Will you be mine? ❤️</div>
+      <div class="proposal-buttons">
+        <button class="yes-btn" id="yes-btn">YES! 😊</button>
+        <button class="no-btn" id="no-btn">No... 😢</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- YES Screen -->
+  <div id="yes-screen" hidden>
+    <div class="yes-message">I LOVE YOU!<br>
+      <span class="big-heart">❤️</span>
+    </div>
+    <div>
+      <input type="text" id="reply-input" placeholder="Your reply..." />
+      <button id="send-reply">Send</button>
+    </div>
+  </div>
+
+  <script>
+    // Password Gate Logic
+    const correctPW = "04102010";
+    const pwForm = document.getElementById("pw-form");
+    const pwInput = document.getElementById("pw-input");
+    const pwError = document.getElementById("pw-error");
+    const pwGate = document.getElementById("password-gate");
+    const shayariPage = document.getElementById("shayari-page");
+    const letterPage = document.getElementById("letter-page");
+    const proposalPage = document.getElementById("proposal-page");
+    const yesScreen = document.getElementById("yes-screen");
+
+    pwForm.addEventListener("submit", (e) => {
+      e.preventDefault();
+      if (pwInput.value.trim() === correctPW) {
+        pwError.textContent = "";
+        pwGate.style.opacity = "0";
+        setTimeout(() => {
+          pwGate.setAttribute("hidden", "");
+          shayariPage.removeAttribute("hidden");
+        }, 600);
+      } else {
+        pwError.textContent = "That's not quite right, my love 🌹";
+        pwInput.value = "";
+        pwInput.focus();
+      }
+    });
+
+    // Next button for Shayari
+    document.getElementById("next-to-letter").addEventListener("click", () => {
+      shayariPage.setAttribute("hidden", "");
+      letterPage.removeAttribute("hidden");
+    });
+
+    // Next button for Letter
+    document.getElementById("next-to-proposal").addEventListener("click", () => {
+      letterPage.setAttribute("hidden", "");
+      proposalPage.removeAttribute("hidden");
+    });
+
+        // Proposal Buttons Logic
+    const yesBtn = document.getElementById("yes-btn");
+    const noBtn = document.getElementById("no-btn");
+
+    yesBtn.addEventListener("click", () => {
+      yesScreen.removeAttribute("hidden");
+      yesScreen.classList.add("show");
+      sendEmail("She Said YES!");
+    });
+
+    // Function to move the "No" button
+    let noBtnMoveCount = 0;
+    function moveNoBtn() {
+      const btn = noBtn;
+      const parent = btn.parentElement;
+      const pw = parent.offsetWidth, ph = parent.offsetHeight;
+      const bw = btn.offsetWidth, bh = btn.offsetHeight;
+
+      // Random position within parent, but not overlapping the "yes" button
+      let left = Math.random() * (pw - bw - 10);
+      let top = Math.random() * (ph - bh - 10);
+
+      // Keep it near original Y (for mobile)
+      if (ph < 110) top = 0;
+
+      btn.style.position = "absolute";
+      btn.style.left = left + "px";
+      btn.style.top = top + "px";
+      btn.style.transition = "left 0.17s, top 0.13s";
+      noBtnMoveCount++;
+      if(noBtnMoveCount > 4){
+        btn.textContent = ["No... 😢","Are you sure? 🤔","You can't say no! ❤️","Please? 🥺","Okay, but think again! 😅"][Math.floor(Math.random() * 5)];
+      }
+    }
+
+    noBtn.addEventListener("pointerdown", moveNoBtn);
+    noBtn.addEventListener("touchstart", moveNoBtn);
+    noBtn.addEventListener("mouseover", moveNoBtn);
+    noBtn.addEventListener("click", moveNoBtn);
+
+    // Function to send email using Formspree
+    function sendEmail(message) {
+      const data = {
+        message: message,
+        timestamp: new Date().toLocaleString(),
+        userAgent: navigator.userAgent
+      };
+
+      fetch('https://formspree.io/f/xjkevaeo', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(data)
+      })
+      .then(response => {
+        if (response.ok) {
+          console.log("Email sent successfully!");
+        } else {
+          throw new Error("Failed to send email.");
+        }
+      })
+      .catch(error => {
+        console.error(error);
+      });
+    }
+
+    // Reply functionality
+    document.getElementById("send-reply").addEventListener("click", () => {
+      const replyInput = document.getElementById("reply-input").value;
+      if (replyInput) {
+        const data = {
+          message: `User  replied: ${replyInput}`,
+          timestamp: new Date().toLocaleString(),
+          userAgent: navigator.userAgent
+        };
+
+        fetch('https://formspree.io/f/xjkevaeo', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(data)
+        })
+        .then(response => {
+          if (response.ok) {
+            console.log("Reply sent successfully!");
+            document.getElementById("reply-input").value = ""; // Clear input
+          } else {
+            throw new Error("Failed to send reply.");
+          }
+        })
+        .catch(error => {
+          console.error(error);
+        });
+      }
+    });
+
+    // Accessibility fixes for mobile keyboard
+    pwInput.addEventListener("focus", () => {
+      window.scrollTo(0, 0);
+    });
+
+    // Focus input on page load
+    setTimeout(() => {
+      try { pwInput.focus(); } catch {}
+    }, 350);
+  </script>
+</body>
+</html>
